@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Código Penal - BOE</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <header>
+        <div style="font-size: 1.2rem; font-weight: bold;"><i class="fas fa-balance-scale"></i> BOE - PENINSULA RP</div>
+        <a href="sistema.html"><button class="btn-back" style="margin: 0;">Volver al Sistema</button></a>
+    </header>
+
+    <div class="table-container">
+        <h1>Código Penal Completo</h1>
+        <input type="text" id="filtro-leyes" onkeyup="filtrarLeyes()" placeholder="Buscar artículo o infracción...">
+        
+        <table id="tabla-leyes">
+            <thead>
+                <tr>
+                    <th>Art.</th>
+                    <th>Infracción</th>
+                    <th>Multa (€)</th>
+                    <th>Sanción / Pena</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- CAPITULO 1: TRÁFICO -->
+                <tr style="background: #273548;"><td colspan="4"><strong>CAPÍTULO I: TRÁFICO</strong></td></tr>
+                <tr><td>1.1</td><td>Uso excesivo del claxon</td><td>150€</td><td>Sanción económica</td></tr>
+                <tr><td>1.2</td><td>Invadir carril contrario</td><td>170€</td><td>Sanción económica</td></tr>
+                <tr><td>1.3</td><td>Giro indebido</td><td>100€</td><td>Retirada de 1 punto</td></tr>
+                <tr><td>1.4</td><td>Conducir fuera de vías</td><td>200€</td><td>Sanción económica</td></tr>
+                <tr><td>1.5</td><td>Caso omiso a indicaciones</td><td>200€</td><td>Sanción económica</td></tr>
+                <tr><td>1.6</td><td>Conducir vehículo mal estado</td><td>150€</td><td>Incautación + 3 puntos</td></tr>
+                <tr><td>1.7</td><td>Estacionar lugar prohibido</td><td>160€</td><td>Incautación del vehículo</td></tr>
+                
+                <!-- CAPITULO 2: ORDEN PÚBLICO -->
+                <tr style="background: #273548;"><td colspan="4"><strong>CAPÍTULO II: ORDEN PÚBLICO</strong></td></tr>
+                <tr><td>2.1</td><td>Insultar a un agente</td><td>500€</td><td>Sanción económica</td></tr>
+                <tr><td>2.2</td><td>Pelea callejera</td><td>1000€</td><td>Prisión 5 meses</td></tr>
+                <tr><td>2.3</td><td>Desorden público</td><td>1500€</td><td>Prisión 10 meses</td></tr>
+
+                <!-- CAPITULO 3: DELITOS GRAVES -->
+                <tr style="background: #273548;"><td colspan="4"><strong>CAPÍTULO III: DELITOS GRAVES</strong></td></tr>
+                <tr><td>3.1</td><td>Robo con violencia</td><td>5000€</td><td>Prisión 30 meses</td></tr>
+                <tr><td>3.2</td><td>Homicidio</td><td>50000€</td><td>Cadena Perpetua (CK)</td></tr>
+                <tr><td>3.3</td><td>Narcotráfico</td><td>25000€</td><td>Prisión 100 meses + Incautación</td></tr>
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+        function filtrarLeyes() {
+            var input, filter, table, tr, td, i, txtValue;
+            input = document.getElementById("filtro-leyes");
+            filter = input.value.toUpperCase();
+            table = document.getElementById("tabla-leyes");
+            tr = table.getElementsByTagName("tr");
+
+            for (i = 0; i < tr.length; i++) {
+                // Buscamos en la segunda columna (Infracción)
+                td = tr[i].getElementsByTagName("td")[1];
+                if (td) {
+                    txtValue = td.textContent || td.innerText;
+                    if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                        tr[i].style.display = "";
+                    } else {
+                        tr[i].style.display = "none";
+                    }
+                }
+            }
+        }
+    </script>
+</body>
+</html>
