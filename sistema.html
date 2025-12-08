@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MDT - Sistema Central</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body onload="checkSession()">
+
+    <header>
+        <div style="font-size: 1.2rem; font-weight: bold;"><i class="fas fa-database"></i> PENINSULA RP - MDT</div>
+        <div>
+            <span id="user-badge" style="margin-right: 20px; color: var(--text);">Cargando...</span>
+            <button class="btn-danger" onclick="logout()">Salir</button>
+        </div>
+    </header>
+
+    <!-- GRID MENU PRINCIPAL -->
+    <div id="grid-principal" class="grid-container">
+        
+        <!-- DISPATCH -->
+        <div class="card" onclick="mostrarSeccion('dispatch')">
+            <i class="fas fa-desktop"></i>
+            <h3>Dispatch</h3>
+        </div>
+
+        <!-- BUSQUEDA CIUDADANA -->
+        <div class="card" onclick="mostrarSeccion('busqueda')">
+            <i class="fas fa-search"></i>
+            <h3>Búsqueda Ciudadana</h3>
+        </div>
+
+        <!-- DENUNCIAS -->
+        <div class="card" onclick="mostrarSeccion('denuncias')">
+            <i class="fas fa-file-alt"></i>
+            <h3>Denuncias e Informes</h3>
+        </div>
+
+        <!-- VEHICULOS (Desactivado) -->
+        <div class="card disabled">
+            <i class="fas fa-car-crash"></i>
+            <h3>Vehículos (Mantenimiento)</h3>
+        </div>
+
+        <!-- CODIGO PENAL (Enlace al otro archivo HTML) -->
+        <a href="codigo_penal.html" style="text-decoration: none; color: inherit;">
+            <div class="card">
+                <i class="fas fa-balance-scale"></i>
+                <h3>Código Penal (BOE)</h3>
+            </div>
+        </a>
+
+        <!-- BUSQUEDA Y CAPTURA (En construcción) -->
+        <div class="card disabled">
+            <i class="fas fa-user-clock"></i>
+            <h3>Búsqueda y Captura (En Construcción)</h3>
+        </div>
+
+        <!-- DEUDAS -->
+        <div class="card" onclick="mostrarSeccion('deudas')">
+            <i class="fas fa-file-invoice-dollar"></i>
+            <h3>Deudores</h3>
+        </div>
+
+        <!-- INVESTIGACIONES (Con candado) -->
+        <div class="card locked police-only" onclick="abrirInvestigaciones()">
+            <i class="fas fa-lock"></i>
+            <h3>Investigaciones</h3>
+        </div>
+
+        <!-- GESTOR AGENTES -->
+        <div class="card police-only" onclick="mostrarSeccion('agentes'); cargarAgentes();">
+            <i class="fas fa-users-cog"></i>
+            <h3>Gestor de Agentes</h3>
+        </div>
+    </div>
+
+    <!-- SECCIONES OCULTAS (Se muestran al hacer click) -->
+    <div id="contenido-dinamico" class="table-container hidden">
+        <button class="btn-back" onclick="volverMenu()">Volver al Menú</button>
+        
+        <!-- Sección Dispatch -->
+        <div id="sec-dispatch" class="hidden">
+            <h2>Central de Dispatch</h2>
+            <table>
+                <thead><tr><th>Hora</th><th>Alerta</th><th>Ubicación</th><th>Estado</th></tr></thead>
+                <tbody>
+                    <tr><td>22:00</td><td>Robo Joyería</td><td>Plaza Central</td><td><span style="color:orange">En Progreso</span></td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Sección Búsqueda -->
+        <div id="sec-busqueda" class="hidden">
+            <h2>Búsqueda de Ciudadanos</h2>
+            <input type="text" id="search-input" placeholder="Buscar por DNI o Nombre...">
+            <button onclick="buscarCiudadano()" style="width: auto;">Buscar</button>
+            <div id="search-results"></div>
+        </div>
+
+        <!-- Sección Deudas -->
+        <div id="sec-deudas" class="hidden">
+            <h2>Consulta de Deudas</h2>
+            <input type="text" id="debt-input" placeholder="Introducir DNI...">
+            <button onclick="buscarDeudas()" style="width: auto;">Verificar</button>
+            <div id="debt-results"></div>
+        </div>
+
+        <!-- Sección Denuncias -->
+        <div id="sec-denuncias" class="hidden">
+            <h2>Denuncias Recientes</h2>
+            <p>No hay denuncias nuevas en las últimas 24 horas.</p>
+        </div>
+
+        <!-- Sección Agentes -->
+        <div id="sec-agentes" class="hidden">
+            <h2>Listado de Agentes - Peninsula RP</h2>
+            <table>
+                <thead><tr><th>Placa</th><th>Rango</th><th>Estado</th></tr></thead>
+                <tbody id="lista-agentes-body">
+                    <!-- Se llena con JS -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- CONTENIDO SECRETO (INVESTIGACIONES) -->
+    <div id="contenido-secreto" class="table-container hidden" style="border: 2px solid gold;">
+        <h2 style="color: gold;">TOP SECRET - ARCHIVOS DE LA CÚPULA</h2>
+        <button class="btn-back" onclick="location.reload()">Cerrar Sesión Segura</button>
+        <p>Bienvenido, Mando de la Fundación.</p>
+        <table>
+            <thead><tr><th>Objetivo</th><th>Organización</th><th>Estado</th></tr></thead>
+            <tbody>
+                <tr><td>El Padrino</td><td>Mafia del Norte</td><td>Vigilancia</td></tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- MODAL PASSWORD INVESTIGACION -->
+    <div id="modal-investigacion" class="investigation-modal">
+        <div class="login-box" style="border: 1px solid gold;">
+            <h3 style="color: gold; margin-bottom: 10px;">ACCESO RESTRINGIDO</h3>
+            <p style="margin-bottom: 10px;">Requiere Llave Maestra</p>
+            <input type="password" id="llave-maestra" placeholder="Introduce la llave...">
+            <button onclick="verificarAccesoInvestigacion()">Acceder</button>
+            <button class="btn-danger" style="margin-top: 10px;" onclick="cerrarModal()">Cancelar</button>
+        </div>
+    </div>
+
+    <script src="placas.js"></script>
+    <script>
+        // Script pequeño para manejo de vistas dentro de sistema.html
+        function mostrarSeccion(id) {
+            document.getElementById('grid-principal').classList.add('hidden');
+            document.getElementById('contenido-dinamico').classList.remove('hidden');
+            
+            // Ocultar todas las subsecciones
+            document.getElementById('sec-dispatch').classList.add('hidden');
+            document.getElementById('sec-busqueda').classList.add('hidden');
+            document.getElementById('sec-deudas').classList.add('hidden');
+            document.getElementById('sec-denuncias').classList.add('hidden');
+            document.getElementById('sec-agentes').classList.add('hidden');
+
+            // Mostrar la elegida
+            document.getElementById('sec-' + id).classList.remove('hidden');
+        }
+
+        function volverMenu() {
+            document.getElementById('contenido-dinamico').classList.add('hidden');
+            document.getElementById('grid-principal').classList.remove('hidden');
+            document.getElementById('search-results').innerHTML = ""; // Limpiar busquedas
+            document.getElementById('debt-results').innerHTML = "";
+        }
+    </script>
+</body>
+</html>
