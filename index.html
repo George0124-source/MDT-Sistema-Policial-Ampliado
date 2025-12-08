@@ -3,25 +3,107 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login - Peninsula RP</title>
+    <title>Acceso Peninsula RP</title>
     <link rel="stylesheet" href="style.css">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
 </head>
 <body>
+
     <div class="login-container">
         <div class="login-box">
-            <i class="fas fa-shield-alt fa-3x" style="color: var(--primary); margin-bottom: 20px;"></i>
-            <h2 style="margin-bottom: 20px;">PENINSULA RP | V2</h2>
+            <h2 style="margin-bottom: 15px;">PENINSULA RP | V2</h2>
+
+            <!-- Pestañas -->
+            <div class="login-tabs">
+                <button class="tab-btn active" onclick="switchTab('policia')">Policía</button>
+                <button class="tab-btn" onclick="switchTab('ciudadano')">Ciudadano</button>
+            </div>
+
+            <!-- Formulario POLICÍA -->
+            <div id="form-policia">
+                <i class="fas fa-shield-alt fa-2x" style="color: var(--primary); margin-bottom: 10px;"></i>
+                <input type="text" id="placa" placeholder="Número de Placa (ej: CF-001)">
+                <input type="password" id="pass-policia" placeholder="Contraseña">
+                <button onclick="loginPolicia()">Entrar al Servicio</button>
+            </div>
+
+            <!-- Formulario CIUDADANO (DNI) -->
+            <div id="form-ciudadano" class="hidden">
+                <i class="fas fa-mobile-alt fa-2x" style="color: var(--success); margin-bottom: 10px;"></i>
+                <p style="font-size: 0.8rem; color: #94a3b8; margin-bottom: 10px;">Introduce tu DNI y clave para ver tu documentación.</p>
+                <input type="text" id="dni-login" placeholder="DNI (ej: 12345678A)">
+                <input type="password" id="pass-ciudadano" placeholder="Contraseña / PIN">
+                <button style="background: var(--success);" onclick="loginCiudadano()">Ver Mi DNI</button>
+            </div>
+
+            <p id="feedback-msg" style="margin-top: 15px; font-weight: bold;"></p>
             
-            <input type="text" id="placa" placeholder="Número de Placa">
-            <input type="password" id="password" placeholder="Contraseña">
-            
-            <button onclick="attemptLogin()">Iniciar Servicio</button>
-            <button class="btn-secondary" onclick="loginCiudadano()">Soy Ciudadano</button>
-            
-            <p id="error-msg" style="color: var(--danger); margin-top: 15px; display: none;">Credenciales incorrectas</p>
+            <!-- Botón de emergencia para crear datos la primera vez -->
+            <button onclick="crearDatosPrueba()" style="margin-top: 30px; background: transparent; border: 1px solid #334155; font-size: 0.7rem;">[ADMIN] Crear Datos Base</button>
         </div>
     </div>
-    <script src="placas.js"></script>
+
+    <!-- PANTALLA TIPO MOVIL (CIUDADANO) -->
+    <div id="movil-view" class="phone-modal">
+        <div class="phone-screen">
+            <div class="notch"></div>
+            <div style="text-align: right; font-size: 12px; color: white; margin-top: 5px;">21:30 <i class="fas fa-wifi"></i> <i class="fas fa-battery-full"></i></div>
+            
+            <div style="text-align: center; margin-top: 20px; color: white;">
+                <h2>Mi Cartera</h2>
+            </div>
+
+            <!-- DNI CARD -->
+            <div class="dni-card">
+                <div style="display: flex; justify-content: space-between; border-bottom: 2px solid #eab308; padding-bottom: 5px; margin-bottom: 10px;">
+                    <strong style="color: #991b1b;">REINO DE ESPAÑA</strong>
+                    <strong style="color: #991b1b;">DNI</strong>
+                </div>
+                <div style="display: grid; grid-template-columns: 80px 1fr; gap: 10px;">
+                    <div style="background: #ddd; height: 80px; display: flex; align-items: center; justify-content: center;">FOTO</div>
+                    <div>
+                        <p id="dni-nombre" style="font-weight: bold; font-size: 1.1em;">---</p>
+                        <p style="font-size: 0.8em; color: #555;">NOMBRE / SURNAME</p>
+                        <p id="dni-numero" style="font-weight: bold; margin-top: 5px;">---</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- DATOS FINANCIEROS -->
+            <div style="margin-top: 20px; background: rgba(255,255,255,0.1); padding: 15px; border-radius: 10px; color: white;">
+                <div class="app-icon"><i class="fas fa-university"></i></div>
+                <h3 style="text-align: center;">Estado Financiero</h3>
+                <p style="margin-top: 10px; display: flex; justify-content: space-between;">
+                    <span>Deudas Pendientes:</span>
+                    <span id="dni-deuda" style="font-weight: bold;">0€</span>
+                </p>
+            </div>
+
+            <button onclick="cerrarMovil()" style="margin-top: auto; background: #333;">Bloquear Teléfono</button>
+        </div>
+    </div>
+
+    <!-- Importamos Firebase y Logic -->
+    <script type="module" src="main.js"></script>
+    <script>
+        // Script simple para cambiar pestañas visuales
+        function switchTab(tab) {
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            document.querySelector(`button[onclick="switchTab('${tab}')"]`).classList.add('active');
+            
+            if(tab === 'policia') {
+                document.getElementById('form-policia').classList.remove('hidden');
+                document.getElementById('form-ciudadano').classList.add('hidden');
+            } else {
+                document.getElementById('form-policia').classList.add('hidden');
+                document.getElementById('form-ciudadano').classList.remove('hidden');
+            }
+        }
+        function cerrarMovil() {
+            document.getElementById('movil-view').style.display = 'none';
+            document.getElementById('dni-login').value = '';
+            document.getElementById('pass-ciudadano').value = '';
+        }
+    </script>
 </body>
 </html>
