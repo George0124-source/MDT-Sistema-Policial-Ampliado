@@ -1,4 +1,4 @@
-/* style.css - Diseño Global */
+/* style.css */
 :root {
     --bg-dark: #0f172a;
     --bg-panel: #1e293b;
@@ -6,12 +6,10 @@
     --accent: #1d4ed8;
     --text: #e2e8f0;
     --danger: #ef4444;
-    --warning: #f59e0b;
     --success: #22c55e;
 }
 
 * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
-
 body { background-color: var(--bg-dark); color: var(--text); min-height: 100vh; }
 
 /* LOGIN */
@@ -21,60 +19,47 @@ body { background-color: var(--bg-dark); color: var(--text); min-height: 100vh; 
 }
 .login-box {
     background: var(--bg-panel); padding: 2.5rem; border-radius: 12px; box-shadow: 0 0 30px rgba(0,0,0,0.6);
-    width: 100%; max-width: 400px; text-align: center; border: 1px solid #334155;
+    width: 100%; max-width: 400px; text-align: center; border: 1px solid #334155; position: relative;
 }
 
-/* INPUTS Y BOTONES */
-input {
-    width: 100%; padding: 12px; margin: 10px 0; background: #0f172a; border: 1px solid #334155;
-    color: white; border-radius: 6px; outline: none; transition: 0.3s;
-}
-input:focus { border-color: var(--primary); }
+/* TABS LOGIN (Policía / Ciudadano) */
+.login-tabs { display: flex; justify-content: center; margin-bottom: 20px; border-bottom: 1px solid #334155; }
+.tab-btn { background: none; border: none; padding: 10px 20px; color: #64748b; cursor: pointer; border-bottom: 2px solid transparent; width: 50%; }
+.tab-btn.active { color: var(--primary); border-bottom: 2px solid var(--primary); font-weight: bold; }
 
-button {
-    width: 100%; padding: 12px; background: var(--primary); border: none; color: white;
-    border-radius: 6px; cursor: pointer; font-weight: bold; margin-top: 10px; transition: 0.3s;
-}
+input { width: 100%; padding: 12px; margin: 10px 0; background: #0f172a; border: 1px solid #334155; color: white; border-radius: 6px; }
+button { width: 100%; padding: 12px; background: var(--primary); border: none; color: white; border-radius: 6px; cursor: pointer; font-weight: bold; margin-top: 10px; transition: 0.3s; }
 button:hover { background: var(--accent); }
-.btn-secondary { background: transparent; border: 1px solid var(--primary); }
-.btn-danger { background: var(--danger); width: auto; padding: 8px 20px; }
-.btn-back { background: #475569; width: auto; display: inline-block; margin-bottom: 20px; }
+.btn-back { background: #475569; width: auto; margin-bottom: 20px; display: inline-block; }
 
-/* HEADER */
-header {
-    background: var(--bg-panel); padding: 15px 40px; display: flex; justify-content: space-between;
-    align-items: center; border-bottom: 3px solid var(--primary); box-shadow: 0 4px 6px rgba(0,0,0,0.3);
-}
-
-/* GRID DEL SISTEMA */
-.grid-container {
-    display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 25px;
-    padding: 40px; max-width: 1400px; margin: 0 auto;
-}
-
-.card {
-    background: var(--bg-panel); padding: 30px; border-radius: 12px; text-align: center;
-    cursor: pointer; transition: 0.3s; border: 1px solid #334155; display: flex;
-    flex-direction: column; align-items: center; justify-content: center; min-height: 200px;
-}
-.card:hover { transform: translateY(-5px); border-color: var(--primary); box-shadow: 0 10px 20px rgba(0,0,0,0.4); }
-.card i { font-size: 3.5rem; margin-bottom: 20px; color: var(--primary); }
-.card h3 { text-transform: uppercase; letter-spacing: 1px; font-size: 1rem; }
-
-/* ESTADOS */
-.disabled { opacity: 0.5; cursor: not-allowed; filter: grayscale(1); }
-.locked i { color: gold; }
-
-/* TABLAS */
-.table-container { padding: 40px; max-width: 1400px; margin: 0 auto; }
-table { width: 100%; border-collapse: collapse; margin-top: 20px; background: var(--bg-panel); border-radius: 8px; overflow: hidden; }
-th, td { padding: 15px; text-align: left; border-bottom: 1px solid #334155; }
-th { background: #1e293b; color: var(--primary); text-transform: uppercase; font-size: 0.9rem; }
-tr:hover { background: #334155; }
-
-/* MODALES Y SECCIONES OCULTAS */
-.hidden { display: none; }
-.investigation-modal {
+/* MODAL MOVIL / DNI */
+.phone-modal {
     position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9);
-    display: none; justify-content: center; align-items: center; z-index: 999;
+    display: none; justify-content: center; align-items: center; z-index: 1000;
 }
+.phone-screen {
+    width: 300px; height: 600px; background: #000; border-radius: 30px; border: 8px solid #333;
+    padding: 20px; position: relative; display: flex; flex-direction: column;
+    box-shadow: 0 0 50px rgba(59, 130, 246, 0.3);
+    background-image: linear-gradient(135deg, #1e1b4b 0%, #312e81 100%);
+}
+.notch { width: 100px; height: 20px; background: #000; position: absolute; top: 0; left: 50%; transform: translateX(-50%); border-bottom-left-radius: 10px; border-bottom-right-radius: 10px; }
+.dni-card {
+    background: white; color: black; padding: 15px; border-radius: 10px; margin-top: 40px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.5); font-size: 0.9rem;
+    background-image: url('https://upload.wikimedia.org/wikipedia/commons/thumb/8/89/Bandera_de_Espa%C3%B1a.svg/1200px-Bandera_de_Espa%C3%B1a.svg.png');
+    background-size: cover; background-blend-mode: overlay; background-color: rgba(255,255,255,0.9);
+}
+.app-icon { width: 50px; height: 50px; background: #22c55e; border-radius: 12px; margin: 10px auto; display: flex; align-items: center; justify-content: center; color: white; font-size: 20px; }
+
+/* SISTEMA MDT */
+header { background: var(--bg-panel); padding: 15px 40px; display: flex; justify-content: space-between; align-items: center; border-bottom: 3px solid var(--primary); }
+.grid-container { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 25px; padding: 40px; max-width: 1400px; margin: 0 auto; }
+.card { background: var(--bg-panel); padding: 30px; border-radius: 12px; text-align: center; cursor: pointer; border: 1px solid #334155; display: flex; flex-direction: column; align-items: center; min-height: 200px; }
+.card:hover { transform: translateY(-5px); border-color: var(--primary); }
+.card i { font-size: 3.5rem; margin-bottom: 20px; color: var(--primary); }
+
+.table-container { padding: 40px; max-width: 1400px; margin: 0 auto; display: none; }
+table { width: 100%; border-collapse: collapse; margin-top: 20px; background: var(--bg-panel); }
+th, td { padding: 15px; text-align: left; border-bottom: 1px solid #334155; }
+.hidden { display: none !important; }
