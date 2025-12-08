@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Acceso Peninsula RP</title>
+    <title>Login - Peninsula RP</title>
     <link rel="stylesheet" href="style.css">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
 </head>
@@ -11,98 +11,85 @@
 
     <div class="login-container">
         <div class="login-box">
-            <h2 style="margin-bottom: 15px;">PENINSULA RP | V2</h2>
+            <h2>PENINSULA RP | V2</h2>
 
-            <!-- Pestañas -->
             <div class="login-tabs">
                 <button class="tab-btn active" onclick="switchTab('policia')">Policía</button>
                 <button class="tab-btn" onclick="switchTab('ciudadano')">Ciudadano</button>
             </div>
 
-            <!-- Formulario POLICÍA -->
+            <!-- Login Policía -->
             <div id="form-policia">
-                <i class="fas fa-shield-alt fa-2x" style="color: var(--primary); margin-bottom: 10px;"></i>
-                <input type="text" id="placa" placeholder="Número de Placa (ej: CF-001)">
+                <input type="text" id="placa" placeholder="Placa (ej: CF-001)">
                 <input type="password" id="pass-policia" placeholder="Contraseña">
-                <button onclick="loginPolicia()">Entrar al Servicio</button>
+                <button onclick="loginPolicia()">Entrar</button>
             </div>
 
-            <!-- Formulario CIUDADANO (DNI) -->
+            <!-- Login Ciudadano -->
             <div id="form-ciudadano" class="hidden">
-                <i class="fas fa-mobile-alt fa-2x" style="color: var(--success); margin-bottom: 10px;"></i>
-                <p style="font-size: 0.8rem; color: #94a3b8; margin-bottom: 10px;">Introduce tu DNI y clave para ver tu documentación.</p>
-                <input type="text" id="dni-login" placeholder="DNI (ej: 12345678A)">
-                <input type="password" id="pass-ciudadano" placeholder="Contraseña / PIN">
-                <button style="background: var(--success);" onclick="loginCiudadano()">Ver Mi DNI</button>
-            </div>
-
-            <p id="feedback-msg" style="margin-top: 15px; font-weight: bold;"></p>
-            
-            <!-- Botón de emergencia para crear datos la primera vez -->
-            <button onclick="crearDatosPrueba()" style="margin-top: 30px; background: transparent; border: 1px solid #334155; font-size: 0.7rem;">[ADMIN] Crear Datos Base</button>
-        </div>
-    </div>
-
-    <!-- PANTALLA TIPO MOVIL (CIUDADANO) -->
-    <div id="movil-view" class="phone-modal">
-        <div class="phone-screen">
-            <div class="notch"></div>
-            <div style="text-align: right; font-size: 12px; color: white; margin-top: 5px;">21:30 <i class="fas fa-wifi"></i> <i class="fas fa-battery-full"></i></div>
-            
-            <div style="text-align: center; margin-top: 20px; color: white;">
-                <h2>Mi Cartera</h2>
-            </div>
-
-            <!-- DNI CARD -->
-            <div class="dni-card">
-                <div style="display: flex; justify-content: space-between; border-bottom: 2px solid #eab308; padding-bottom: 5px; margin-bottom: 10px;">
-                    <strong style="color: #991b1b;">REINO DE ESPAÑA</strong>
-                    <strong style="color: #991b1b;">DNI</strong>
-                </div>
-                <div style="display: grid; grid-template-columns: 80px 1fr; gap: 10px;">
-                    <div style="background: #ddd; height: 80px; display: flex; align-items: center; justify-content: center;">FOTO</div>
-                    <div>
-                        <p id="dni-nombre" style="font-weight: bold; font-size: 1.1em;">---</p>
-                        <p style="font-size: 0.8em; color: #555;">NOMBRE / SURNAME</p>
-                        <p id="dni-numero" style="font-weight: bold; margin-top: 5px;">---</p>
-                    </div>
-                </div>
-            </div>
-
-            <!-- DATOS FINANCIEROS -->
-            <div style="margin-top: 20px; background: rgba(255,255,255,0.1); padding: 15px; border-radius: 10px; color: white;">
-                <div class="app-icon"><i class="fas fa-university"></i></div>
-                <h3 style="text-align: center;">Estado Financiero</h3>
-                <p style="margin-top: 10px; display: flex; justify-content: space-between;">
-                    <span>Deudas Pendientes:</span>
-                    <span id="dni-deuda" style="font-weight: bold;">0€</span>
+                <input type="text" id="dni-login" placeholder="Tu DNI">
+                <input type="password" id="pass-ciudadano" placeholder="Tu Contraseña">
+                <button style="background: var(--success);" onclick="loginCiudadano()">Ver DNI</button>
+                
+                <!-- BOTÓN NUEVO: CREAR CUENTA -->
+                <p style="margin-top: 15px; font-size: 0.9rem;">
+                    ¿No tienes DNI? 
+                    <a href="#" onclick="abrirRegistro()" style="color: var(--primary);">Créalo aquí</a>
                 </p>
             </div>
 
-            <button onclick="cerrarMovil()" style="margin-top: auto; background: #333;">Bloquear Teléfono</button>
+            <p id="feedback-msg" style="margin-top: 10px;"></p>
         </div>
     </div>
 
-    <!-- Importamos Firebase y Logic -->
+    <!-- MODAL REGISTRO DE CIUDADANO (NUEVO) -->
+    <div id="modal-registro" class="phone-modal">
+        <div class="login-box" style="position: relative; max-width: 350px;">
+            <h3>Crear Nuevo DNI</h3>
+            <p style="font-size: 0.8rem; margin-bottom: 10px; color: #aaa;">Rellena tus datos para empadronarte.</p>
+            
+            <input type="text" id="new-nombre" placeholder="Nombre y Apellidos">
+            <input type="text" id="new-dni" placeholder="DNI Deseado (ej: 0000X)">
+            <input type="password" id="new-pass" placeholder="Crea una Contraseña">
+            
+            <button style="background: var(--success);" onclick="registrarCiudadanoPublico()">Registrarse</button>
+            <button style="background: var(--danger); margin-top: 5px;" onclick="cerrarRegistro()">Cancelar</button>
+            
+            <p id="reg-msg" style="margin-top: 10px; font-weight: bold;"></p>
+        </div>
+    </div>
+
+    <!-- MODAL TELEFONO (Ya lo tenías) -->
+    <div id="movil-view" class="phone-modal">
+        <div class="phone-screen">
+            <div class="notch"></div>
+            <div style="text-align: center; margin-top: 20px; color: white;"><h2>Mi Cartera</h2></div>
+            <div class="dni-card">
+                <strong style="color: #991b1b;">REINO DE ESPAÑA</strong>
+                <p id="dni-nombre" style="font-weight: bold; font-size: 1.1em; margin-top: 10px;">---</p>
+                <p id="dni-numero" style="font-weight: bold;">---</p>
+            </div>
+            <div style="margin-top: 20px; color: white; text-align: center;">
+                <h3>Deudas</h3>
+                <p id="dni-deuda" style="font-size: 1.5em;">0€</p>
+            </div>
+            <button onclick="document.getElementById('movil-view').style.display='none'" style="margin-top: auto; background: #333;">Salir</button>
+        </div>
+    </div>
+
     <script type="module" src="main.js"></script>
     <script>
-        // Script simple para cambiar pestañas visuales
-        function switchTab(tab) {
+        function switchTab(t){
+            document.getElementById('form-policia').classList.add('hidden');
+            document.getElementById('form-ciudadano').classList.add('hidden');
             document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-            document.querySelector(`button[onclick="switchTab('${tab}')"]`).classList.add('active');
-            
-            if(tab === 'policia') {
+            if(t=='policia'){
                 document.getElementById('form-policia').classList.remove('hidden');
-                document.getElementById('form-ciudadano').classList.add('hidden');
+                event.target.classList.add('active');
             } else {
-                document.getElementById('form-policia').classList.add('hidden');
                 document.getElementById('form-ciudadano').classList.remove('hidden');
+                event.target.classList.add('active');
             }
-        }
-        function cerrarMovil() {
-            document.getElementById('movil-view').style.display = 'none';
-            document.getElementById('dni-login').value = '';
-            document.getElementById('pass-ciudadano').value = '';
         }
     </script>
 </body>
