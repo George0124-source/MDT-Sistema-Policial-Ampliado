@@ -2,61 +2,66 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MDT - Sistema Central</title>
+    <title>MDT - Peninsula RP</title>
     <link rel="stylesheet" href="style.css">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
 </head>
 <body>
 
     <header>
-        <div style="font-size: 1.2rem; font-weight: bold;"><i class="fas fa-database"></i> PENINSULA RP - MDT</div>
-        <div>
-            <span id="user-badge" style="margin-right: 20px; color: var(--text);">Cargando...</span>
-            <button style="background: var(--danger); width: auto; padding: 8px 20px;" id="btn-logout">Salir</button>
+        <div style="font-size: 1.4rem; font-weight: 800; letter-spacing: 1px;">
+            <i class="fas fa-shield-alt" style="color: var(--primary);"></i> MDT <span style="font-weight: 200;">POLICE</span>
+        </div>
+        <div style="display: flex; align-items: center; gap: 20px;">
+            <span id="user-badge" style="background: #1e293b; padding: 5px 15px; border-radius: 20px; font-size: 0.8rem;"></span>
+            <button class="btn-danger" onclick="localStorage.clear(); window.location.href='index.html'">SALIR</button>
         </div>
     </header>
 
-    <!-- GRID MENU PRINCIPAL -->
     <div id="grid-principal" class="grid-container">
         <div class="card" onclick="verSeccion('busqueda')">
-            <i class="fas fa-search"></i>
-            <h3>Búsqueda Ciudadana</h3>
+            <i class="fas fa-search-dollar"></i>
+            <h3>Base de Datos</h3>
+            <p>Búsqueda de DNI y Antecedentes</p>
         </div>
-        <div class="card" onclick="verSeccion('agentes')">
-            <i class="fas fa-users-cog"></i>
-            <h3>Gestor de Agentes</h3>
+        <div class="card" onclick="verSeccion('agentes'); window.cargarAgentes();">
+            <i class="fas fa-id-badge"></i>
+            <h3>Central de Agentes</h3>
+            <p>Listado operativo CNP/GC</p>
         </div>
-        <a href="codigo_penal.html" style="text-decoration: none; color: inherit;">
-            <div class="card">
-                <i class="fas fa-balance-scale"></i>
-                <h3>Código Penal (BOE)</h3>
-            </div>
-        </a>
-        <div class="card locked" style="border-color: gold; color: gold;">
-            <i class="fas fa-lock"></i>
-            <h3>Investigaciones (Cúpula)</h3>
+        <div class="card" onclick="window.location.href='codigo_penal.html'">
+            <i class="fas fa-book-dead"></i>
+            <h3>Código Penal</h3>
+            <p>Consulta de leyes y multas</p>
+        </div>
+        <div class="card" style="border: 1px dashed var(--warning);" onclick="window.verifyMasterAction(() => verSeccion('investigaciones'))">
+            <i class="fas fa-user-secret" style="color: var(--warning);"></i>
+            <h3>Investigaciones</h3>
+            <p>Acceso restringido Cúpula</p>
         </div>
     </div>
 
-    <!-- SECCIONES -->
+    <!-- SECCIÓN BÚSQUEDA -->
     <div id="sec-busqueda" class="table-container">
-        <button class="btn-back" onclick="volverMenu()">Volver</button>
-        <h2>Búsqueda de Antecedentes y Deudas</h2>
-        <div style="display: flex; gap: 10px;">
-            <input type="text" id="input-busqueda" placeholder="Buscar por DNI o Nombre...">
-            <button style="width: 150px;" id="btn-buscar">Buscar</button>
+        <button class="btn-primary" onclick="volverMenu()"><i class="fas fa-arrow-left"></i> Volver</button>
+        <h2 style="margin: 20px 0;">Terminal de Identificación</h2>
+        <div style="display: flex; gap: 10px; margin-bottom: 20px;">
+            <input type="text" id="input-busqueda" placeholder="Ingrese DNI (ej: 1234X)" style="width: 100%; max-width: 400px; padding: 15px;">
+            <button class="btn-primary" onclick="window.buscarCiudadanoPol()"><i class="fas fa-search"></i> CONSULTAR</button>
         </div>
-        <div id="resultados-busqueda" style="margin-top: 20px;"></div>
+        <div id="resultados-busqueda"></div>
     </div>
 
-    <div id="sec-agentes" class="table-container">
-        <button class="btn-back" onclick="volverMenu()">Volver</button>
-        <h2>Listado de Agentes Autorizados</h2>
-        <table>
-            <thead><tr><th>Placa</th><th>Rango</th><th>ID Discord</th></tr></thead>
-            <tbody id="tabla-agentes-body"></tbody>
-        </table>
+    <!-- SECCIÓN INVESTIGACIONES (SECRET) -->
+    <div id="sec-investigaciones" class="table-container">
+        <button class="btn-primary" onclick="volverMenu()">Volver</button>
+        <h1 style="color: var(--warning); margin-top: 20px;">ARCHIVO CLASIFICADO - CÚPULA</h1>
+        <div style="background: #000; padding: 20px; color: lime; font-family: 'Courier New', monospace; border-radius: 8px; margin-top: 20px;">
+            <p>> Cargando protocolos de alta traición...</p>
+            <p>> Investigando blanqueo de capitales en Joyería...</p>
+            <p>> Agentes bajo sospecha: CNP-002</p>
+            <p>> Próximo operativo: Golpe al cártel (Viernes 22:00)</p>
+        </div>
     </div>
 
     <script type="module" src="main.js"></script>
@@ -70,11 +75,6 @@
             document.querySelectorAll('.table-container').forEach(e => e.style.display = 'none');
             document.getElementById('grid-principal').style.display = 'grid';
         }
-        
-        // Manejo del botón logout en HTML para llamar al módulo
-        document.getElementById('btn-logout').addEventListener('click', () => {
-            window.location.href = "index.html";
-        });
     </script>
 </body>
 </html>
