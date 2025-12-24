@@ -3,91 +3,78 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login - Peninsula RP</title>
+    <title>Acceso MDT - Ministerio del Interior</title>
     <link rel="stylesheet" href="style.css">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
 </head>
-<body>
+<body class="login-page">
 
-    <div class="login-container">
-        <div class="login-box">
-            <h2>PENINSULA RP | V2</h2>
-
-            <div class="login-tabs">
-                <button class="tab-btn active" onclick="switchTab('policia')">Policía</button>
-                <button class="tab-btn" onclick="switchTab('ciudadano')">Ciudadano</button>
+    <div class="login-overlay">
+        <div class="login-card">
+            <div class="auth-header">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Escudo_de_la_Polic%C3%ADa_Nacional_%28Espa%C3%B1a%29.svg/1200px-Escudo_de_la_Polic%C3%ADa_Nacional_%28Espa%C3%B1a%29.svg.png" alt="CNP" class="auth-logo">
+                <h1>MDT - PENINSULA RP</h1>
+                <p>Base de Datos de Seguridad del Estado</p>
             </div>
 
-            <!-- Login Policía -->
-            <div id="form-policia">
-                <input type="text" id="placa" placeholder="Placa (ej: CF-001)">
-                <input type="password" id="pass-policia" placeholder="Contraseña">
-                <button onclick="loginPolicia()">Entrar</button>
+            <div class="auth-tabs">
+                <button class="auth-tab active" onclick="switchTab('pol')">POLICÍA</button>
+                <button class="auth-tab" onclick="switchTab('ciu')">CIUDADANO</button>
             </div>
 
-            <!-- Login Ciudadano -->
-            <div id="form-ciudadano" class="hidden">
-                <input type="text" id="dni-login" placeholder="Tu DNI">
-                <input type="password" id="pass-ciudadano" placeholder="Tu Contraseña">
-                <button style="background: var(--success);" onclick="loginCiudadano()">Ver DNI</button>
-                
-                <!-- BOTÓN NUEVO: CREAR CUENTA -->
-                <p style="margin-top: 15px; font-size: 0.9rem;">
-                    ¿No tienes DNI? 
-                    <a href="#" onclick="abrirRegistro()" style="color: var(--primary);">Créalo aquí</a>
-                </p>
+            <!-- Formulario Policía -->
+            <div id="auth-pol" class="auth-form">
+                <div class="input-group">
+                    <i class="fas fa-id-badge"></i>
+                    <input type="text" id="placa" placeholder="Número de Placa">
+                </div>
+                <div class="input-group">
+                    <i class="fas fa-lock"></i>
+                    <input type="password" id="pass-pol" placeholder="Contraseña">
+                </div>
+                <button class="btn-auth" onclick="loginPolicia()">ACCEDER AL SISTEMA</button>
             </div>
 
-            <p id="feedback-msg" style="margin-top: 10px;"></p>
+            <!-- Formulario Ciudadano -->
+            <div id="auth-ciu" class="auth-form hidden">
+                <div class="input-group">
+                    <i class="fas fa-fingerprint"></i>
+                    <input type="text" id="dni-login" placeholder="Documento Nacional Identidad">
+                </div>
+                <div class="input-group">
+                    <i class="fas fa-key"></i>
+                    <input type="password" id="pass-ciu" placeholder="Contraseña">
+                </div>
+                <button class="btn-auth btn-success" onclick="loginCiudadano()">VER CARTERA DIGITAL</button>
+                <p class="auth-footer">¿No tienes DNI? <a href="#" onclick="abrirRegistro()">Empadronarse aquí</a></p>
+            </div>
+            
+            <div id="feedback-msg" class="feedback"></div>
         </div>
     </div>
 
-    <!-- MODAL REGISTRO DE CIUDADANO (NUEVO) -->
-    <div id="modal-registro" class="phone-modal">
-        <div class="login-box" style="position: relative; max-width: 350px;">
-            <h3>Crear Nuevo DNI</h3>
-            <p style="font-size: 0.8rem; margin-bottom: 10px; color: #aaa;">Rellena tus datos para empadronarte.</p>
-            
-            <input type="text" id="new-nombre" placeholder="Nombre y Apellidos">
-            <input type="text" id="new-dni" placeholder="DNI Deseado (ej: 0000X)">
-            <input type="password" id="new-pass" placeholder="Crea una Contraseña">
-            
-            <button style="background: var(--success);" onclick="registrarCiudadanoPublico()">Registrarse</button>
-            <button style="background: var(--danger); margin-top: 5px;" onclick="cerrarRegistro()">Cancelar</button>
-            
-            <p id="reg-msg" style="margin-top: 10px; font-weight: bold;"></p>
-        </div>
-    </div>
-
-    <!-- MODAL TELEFONO (Ya lo tenías) -->
-    <div id="movil-view" class="phone-modal">
-        <div class="phone-screen">
-            <div class="notch"></div>
-            <div style="text-align: center; margin-top: 20px; color: white;"><h2>Mi Cartera</h2></div>
-            <div class="dni-card">
-                <strong style="color: #991b1b;">REINO DE ESPAÑA</strong>
-                <p id="dni-nombre" style="font-weight: bold; font-size: 1.1em; margin-top: 10px;">---</p>
-                <p id="dni-numero" style="font-weight: bold;">---</p>
-            </div>
-            <div style="margin-top: 20px; color: white; text-align: center;">
-                <h3>Deudas</h3>
-                <p id="dni-deuda" style="font-size: 1.5em;">0€</p>
-            </div>
-            <button onclick="document.getElementById('movil-view').style.display='none'" style="margin-top: auto; background: #333;">Salir</button>
+    <!-- MODAL REGISTRO -->
+    <div id="modal-registro" class="modal">
+        <div class="modal-content">
+            <h3>Registro Civil - Peninsula RP</h3>
+            <input type="text" id="new-nombre" placeholder="Nombre Completo">
+            <input type="text" id="new-dni" placeholder="DNI Deseado">
+            <input type="password" id="new-pass" placeholder="Contraseña Segura">
+            <button class="btn-auth btn-success" onclick="registrarCiudadanoPublico()">SOLICITAR ALTA</button>
+            <button class="btn-auth btn-danger" onclick="cerrarRegistro()">CANCELAR</button>
         </div>
     </div>
 
     <script type="module" src="main.js"></script>
     <script>
-        function switchTab(t){
-            document.getElementById('form-policia').classList.add('hidden');
-            document.getElementById('form-ciudadano').classList.add('hidden');
-            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-            if(t=='policia'){
-                document.getElementById('form-policia').classList.remove('hidden');
+        function switchTab(type) {
+            document.querySelectorAll('.auth-tab').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.auth-form').forEach(f => f.classList.add('hidden'));
+            if(type === 'pol') {
+                document.getElementById('auth-pol').classList.remove('hidden');
                 event.target.classList.add('active');
             } else {
-                document.getElementById('form-ciudadano').classList.remove('hidden');
+                document.getElementById('auth-ciu').classList.remove('hidden');
                 event.target.classList.add('active');
             }
         }
