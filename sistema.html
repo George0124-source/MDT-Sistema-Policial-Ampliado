@@ -2,78 +2,64 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>MDT - Peninsula RP</title>
+    <title>MDT - Terminal Operativo</title>
     <link rel="stylesheet" href="style.css">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
 </head>
-<body>
+<body style="background: #0a0f1d; color: white;">
 
     <header>
-        <div style="font-size: 1.4rem; font-weight: 800; letter-spacing: 1px;">
-            <i class="fas fa-shield-alt" style="color: var(--primary);"></i> MDT <span style="font-weight: 200;">POLICE</span>
-        </div>
-        <div style="display: flex; align-items: center; gap: 20px;">
-            <span id="user-badge" style="background: #1e293b; padding: 5px 15px; border-radius: 20px; font-size: 0.8rem;"></span>
-            <button class="btn-danger" onclick="localStorage.clear(); window.location.href='index.html'">SALIR</button>
-        </div>
+        <div><i class="fas fa-shield-alt"></i> SISTEMA MDT - POLICÍA NACIONAL</div>
+        <div id="badge-area" style="color: var(--cnp-gold); font-weight: bold;"></div>
     </header>
 
-    <div id="grid-principal" class="grid-container">
-        <div class="card" onclick="verSeccion('busqueda')">
-            <i class="fas fa-search-dollar"></i>
-            <h3>Base de Datos</h3>
-            <p>Búsqueda de DNI y Antecedentes</p>
-        </div>
-        <div class="card" onclick="verSeccion('agentes'); window.cargarAgentes();">
-            <i class="fas fa-id-badge"></i>
-            <h3>Central de Agentes</h3>
-            <p>Listado operativo CNP/GC</p>
-        </div>
-        <div class="card" onclick="window.location.href='codigo_penal.html'">
-            <i class="fas fa-book-dead"></i>
-            <h3>Código Penal</h3>
-            <p>Consulta de leyes y multas</p>
-        </div>
-        <div class="card" style="border: 1px dashed var(--warning);" onclick="window.verifyMasterAction(() => verSeccion('investigaciones'))">
-            <i class="fas fa-user-secret" style="color: var(--warning);"></i>
-            <h3>Investigaciones</h3>
-            <p>Acceso restringido Cúpula</p>
-        </div>
+    <div class="sidebar">
+        <div class="nav-item active" onclick="verSec('busqueda')"><i class="fas fa-search"></i> Búsqueda</div>
+        <div class="nav-item" onclick="verSec('penal')"><i class="fas fa-gavel"></i> Código Penal</div>
+        <div class="nav-item" style="color: #f87171;" onclick="abrirStaff()"><i class="fas fa-user-shield"></i> STAFF - ALTO RANGO</div>
+        <div class="nav-item" onclick="location.href='index.html'" style="margin-top: 50px;"><i class="fas fa-power-off"></i> Desconexión</div>
     </div>
 
-    <!-- SECCIÓN BÚSQUEDA -->
-    <div id="sec-busqueda" class="table-container">
-        <button class="btn-primary" onclick="volverMenu()"><i class="fas fa-arrow-left"></i> Volver</button>
-        <h2 style="margin: 20px 0;">Terminal de Identificación</h2>
-        <div style="display: flex; gap: 10px; margin-bottom: 20px;">
-            <input type="text" id="input-busqueda" placeholder="Ingrese DNI (ej: 1234X)" style="width: 100%; max-width: 400px; padding: 15px;">
-            <button class="btn-primary" onclick="window.buscarCiudadanoPol()"><i class="fas fa-search"></i> CONSULTAR</button>
+    <div class="main-content">
+        <!-- SECCION BUSQUEDA -->
+        <div id="sec-busqueda">
+            <h1>Terminal de Consulta Ciudadana</h1>
+            <div style="display:flex; gap:10px; margin-top:20px;">
+                <input type="text" id="input-busqueda" placeholder="Ingrese DNI..." style="padding:15px; width:400px; background:#1e293b; border:none; color:white;">
+                <button onclick="window.buscarCiudadanoPol()" class="btn-auth" style="width:150px; margin:0;">BUSCAR</button>
+            </div>
+            <div id="resultados-busqueda" style="margin-top:30px;"></div>
         </div>
-        <div id="resultados-busqueda"></div>
-    </div>
 
-    <!-- SECCIÓN INVESTIGACIONES (SECRET) -->
-    <div id="sec-investigaciones" class="table-container">
-        <button class="btn-primary" onclick="volverMenu()">Volver</button>
-        <h1 style="color: var(--warning); margin-top: 20px;">ARCHIVO CLASIFICADO - CÚPULA</h1>
-        <div style="background: #000; padding: 20px; color: lime; font-family: 'Courier New', monospace; border-radius: 8px; margin-top: 20px;">
-            <p>> Cargando protocolos de alta traición...</p>
-            <p>> Investigando blanqueo de capitales en Joyería...</p>
-            <p>> Agentes bajo sospecha: CNP-002</p>
-            <p>> Próximo operativo: Golpe al cártel (Viernes 22:00)</p>
+        <!-- SECCION STAFF (OCULTA POR DEFECTO) -->
+        <div id="sec-staff" class="hidden">
+            <h1 style="color:var(--cnp-gold)">Gestión de Personal - Alto Rango</h1>
+            <p>Desde aquí puede autorizar nuevas placas de agentes.</p>
+            <button class="btn-auth" onclick="window.anadirNuevaPlaca()" style="width:250px; margin-top:20px;">+ AÑADIR NUEVA PLACA</button>
+            <div id="lista-agentes-admin" style="margin-top:30px; max-width:500px;"></div>
         </div>
     </div>
 
     <script type="module" src="main.js"></script>
     <script>
-        function verSeccion(id) {
-            document.getElementById('grid-principal').style.display = 'none';
-            document.querySelectorAll('.table-container').forEach(e => e.style.display = 'none');
-            document.getElementById('sec-' + id).style.display = 'block';
+        const user = JSON.parse(localStorage.getItem('agenteActivo'));
+        if(!user) window.location.href="index.html";
+        document.getElementById('badge-area').innerText = user.rango + " | " + user.placa;
+
+        function verSec(id) {
+            document.getElementById('sec-busqueda').classList.add('hidden');
+            document.getElementById('sec-staff').classList.add('hidden');
+            document.getElementById('sec-' + id).classList.remove('hidden');
         }
-        function volverMenu() {
-            document.querySelectorAll('.table-container').forEach(e => e.style.display = 'none');
-            document.getElementById('grid-principal').style.display = 'grid';
+
+        function abrirStaff() {
+            const p = prompt("ACCESO RESTRINGIDO. Ingrese Contraseña Staff:");
+            if(p === "CupulaFundadoraPeninsula0124") {
+                verSec('staff');
+                window.cargarAgentesStaff();
+            } else {
+                alert("ALERTA: Intento de acceso no autorizado registrado.");
+            }
         }
     </script>
 </body>
